@@ -38,7 +38,11 @@ include $(PREBUILT_STATIC_LIBRARY)
 include $(CLEAR_VARS)
 LOCAL_MODULE    := native-lib
 LOCAL_SRC_FILES := \
-                native-lib.cpp
+                native-lib.cpp \
+                cmdutils \
+                ffmpeg \
+                ffmpeg_filter \
+                ffmpeg_opt
 LOCAL_C_INCLUDES :=$(LOCAL_PATH)/include
 LOCAL_STATIC_LIBRARIES := avformat avcodec avfilter avutil swresample swscale
 LOCAL_CPPFLAGS:=-std=c++11
