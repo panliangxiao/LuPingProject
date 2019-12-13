@@ -30,6 +30,11 @@ LOCAL_MODULE := swscale
 LOCAL_SRC_FILES := ${TARGET_ARCH_ABI}/libswscale.a
 include $(PREBUILT_STATIC_LIBRARY)
 
+#include $(CLEAR_VARS)
+#LOCAL_MODULE := fdk-aac
+#LOCAL_SRC_FILES := ${TARGET_ARCH_ABI}/libfdk-aac.a
+#include $(PREBUILT_STATIC_LIBRARY)
+
 include $(CLEAR_VARS)
 LOCAL_MODULE    := native-lib
 LOCAL_SRC_FILES := \
