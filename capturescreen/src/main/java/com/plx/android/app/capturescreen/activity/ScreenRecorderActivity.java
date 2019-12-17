@@ -6,13 +6,14 @@ import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.plx.android.app.base.AbsBaseActivity;
 import com.plx.android.app.capturescreen.R;
+import com.plx.android.app.capturescreen.constant.RecorderConstants;
+import com.plx.android.app.capturescreen.service.ScreenRecorderService;
 
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -57,13 +58,12 @@ public class ScreenRecorderActivity extends AbsBaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_MEDIA_PROJECTION) {
-            // NOTE: Should pass this result data into a Service to run ScreenRecorder.
-            // The following codes are merely exemplary.
-
-            mMediaProjection = mMediaProjectionManager.getMediaProjection(resultCode, data);
-            if (mMediaProjection == null) {
-                Log.e(TAG, "media projection is null");
-            }
+            //获得录屏权限，启动Service进行录制
+            Intent intent=new Intent(this, ScreenRecorderService.class);
+            intent.putExtra(RecorderConstants.result_code,resultCode);
+            intent.putExtra(RecorderConstants.result_data,data);
+            startService(intent);
+            Toast.makeText(this,"录屏开始",Toast.LENGTH_SHORT).show();
         }
     }
 
