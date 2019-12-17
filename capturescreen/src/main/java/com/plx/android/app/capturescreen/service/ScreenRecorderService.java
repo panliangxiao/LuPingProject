@@ -31,8 +31,6 @@ public class ScreenRecorderService extends Service {
     private int screenHeight;
     private int screenDensity;
 
-    private Context context = null;
-
 
     @Override
     public IBinder onBind(Intent intent) {
