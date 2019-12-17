@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.plx.android.app.capturescreen.ScreenRecorderActivity;
+import com.plx.android.app.capturescreen.activity.ScreenRecorderActivity;
 
 public class MainActivity extends AppCompatActivity {
 

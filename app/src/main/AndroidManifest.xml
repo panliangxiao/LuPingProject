@@ -12,7 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.plx.android.app.capturescreen.ScreenRecorderActivity">
+        <activity android:name="com.plx.android.app.capturescreen.activity.ScreenRecorderActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

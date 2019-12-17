@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.plx.android.app.capturescreen" >
     <application>
-        <activity android:name=".ScreenRecorderActivity"
+        <activity android:name=".activity.ScreenRecorderActivity"
             android:theme="@style/AppTheme"/>
     </application>
 </manifest>
