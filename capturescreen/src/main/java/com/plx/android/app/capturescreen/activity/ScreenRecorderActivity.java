@@ -1,11 +1,13 @@
 package com.plx.android.app.capturescreen.activity;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.hardware.display.VirtualDisplay;
 import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -59,22 +61,34 @@ public class ScreenRecorderActivity extends AbsBaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_MEDIA_PROJECTION) {
             //获得录屏权限，启动Service进行录制
-            Intent intent=new Intent(this, ScreenRecorderService.class);
-            intent.putExtra(RecorderConstants.result_code,resultCode);
-            intent.putExtra(RecorderConstants.result_data,data);
+            Intent intent = new Intent(this, ScreenRecorderService.class);
+            intent.putExtra(RecorderConstants.result_code, resultCode);
+            intent.putExtra(RecorderConstants.result_data, data);
+            //获取资源对象
+            Resources resources = getResources();
+            //获取屏幕数据
+            DisplayMetrics displayMetrics = resources.getDisplayMetrics();
+            //获取屏幕宽高，单位是像素
+            int widthPixels = displayMetrics.widthPixels;
+            int heightPixels = displayMetrics.heightPixels;
+            //获取屏幕密度倍数
+            float density = displayMetrics.density;
+            intent.putExtra(RecorderConstants.screen_width, widthPixels);
+            intent.putExtra(RecorderConstants.screen_height, heightPixels);
+            intent.putExtra(RecorderConstants.screen_density, density);
             startService(intent);
-            Toast.makeText(this,"录屏开始",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "录屏开始", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void startRecorder(){
+    private void startRecorder() {
         requestCheckPermissions(needPermissions, REQUEST_PERMISSIONS);
     }
 
     @Override
     protected void onPermissionsGranted(int requestCode) {
         super.onPermissionsGranted(requestCode);
-        if (mMediaProjection == null){
+        if (mMediaProjection == null) {
             requestMediaProjection();
         }
     }
