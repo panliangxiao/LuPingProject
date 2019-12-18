@@ -4,5 +4,7 @@
     <string name="no_permission">No Permission!</string>
     <string name="no_permission_to_write_sd_ard">No permission to write sd card</string>
     <string name="using_your_mic_to_record_audio">Using your mic to record audio and your sd card to save video file</string>
+    <string name="permission_denied_screen_recorder_cancel">Permission denied! Screen recorder is cancel</string>
+
 
 </resources>

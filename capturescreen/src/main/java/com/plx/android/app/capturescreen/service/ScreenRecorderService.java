@@ -3,14 +3,22 @@ package com.plx.android.app.capturescreen.service;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
 import android.hardware.display.DisplayManager;
 import android.hardware.display.VirtualDisplay;
-import android.media.MediaRecorder;
+import android.media.MediaCodecInfo;
 import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
+import android.net.Uri;
+import android.os.Handler;
 import android.os.IBinder;
+import android.util.Log;
+import android.widget.Toast;
 
+import com.plx.android.app.capturescreen.R;
+import com.plx.android.app.capturescreen.config.VideoEncodeConfig;
 import com.plx.android.app.capturescreen.constant.RecorderConstants;
+import com.plx.android.app.capturescreen.core.ScreenRecorder;
 import com.plx.android.app.capturescreen.utils.FileUtils;
 
 import java.io.File;
@@ -18,19 +26,23 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import static com.plx.android.app.capturescreen.constant.RecorderConstants.VERBOSE;
+import static com.plx.android.app.capturescreen.core.ScreenRecorder.VIDEO_AVC;
+
 public class ScreenRecorderService extends Service {
+
+    private static final String TAG = ScreenRecorderService.class.getSimpleName();
 
     private int resultCode;
     private Intent resultData = null;
-
-    private MediaProjection mediaProjection = null;
-    private MediaRecorder mediaRecorder = null;
-    private VirtualDisplay virtualDisplay = null;
 
     private int screenWidth;
     private int screenHeight;
     private int screenDensity;
 
+    private ScreenRecorder mRecorder;
+    private MediaProjection mMediaProjection;
+    private VirtualDisplay mVirtualDisplay;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -45,10 +57,14 @@ public class ScreenRecorderService extends Service {
             screenWidth = intent.getIntExtra(RecorderConstants.screen_width, 0);
             screenHeight = intent.getIntExtra(RecorderConstants.screen_height, 0);
             screenDensity = intent.getIntExtra(RecorderConstants.screen_density, 0);
-            mediaProjection = createMediaProjection();
-            mediaRecorder = createMediaRecorder();
-            virtualDisplay = createVirtualDisplay();
-            mediaRecorder.start();
+            mMediaProjection = createMediaProjection();
+            if (mMediaProjection == null) {
+                if (VERBOSE)
+                    Log.e("@@", "media projection is null");
+                return START_NOT_STICKY;
+            }
+            mMediaProjection.registerCallback(mProjectionCallback, new Handler());
+            startCapturing(mMediaProjection);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -56,20 +72,39 @@ public class ScreenRecorderService extends Service {
         return START_NOT_STICKY;
     }
 
+    private void startCapturing(MediaProjection mediaProjection) {
+        VideoEncodeConfig video = createVideoConfig();
+        if (video == null) {
+            return;
+        }
+
+        File dir = FileUtils.getSavedVideoDir();
+        if (!dir.exists() && !dir.mkdirs()) {
+            cancelRecorder();
+            return;
+        }
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd-HHmmss", Locale.US);
+        final File file = new File(dir, "Screenshots-" + format.format(new Date())
+                + "-" + video.width + "x" + video.height + ".mp4");
+        if (VERBOSE)
+            Log.d(TAG, "Create recorder with :" + video + " \n " + "\n " + file);
+        mRecorder = newRecorder(mediaProjection, video, file);
+        startRecorder();
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (virtualDisplay != null) {
-            virtualDisplay.release();
-            virtualDisplay = null;
+        stopRecorder();
+        if (mVirtualDisplay != null) {
+            mVirtualDisplay.setSurface(null);
+            mVirtualDisplay.release();
+            mVirtualDisplay = null;
         }
-        if (mediaRecorder != null) {
-            mediaRecorder.stop();
-            mediaRecorder = null;
-        }
-        if (mediaProjection != null) {
-            mediaProjection.stop();
-            mediaProjection = null;
+        if (mMediaProjection != null) {
+            mMediaProjection.unregisterCallback(mProjectionCallback);
+            mMediaProjection.stop();
+            mMediaProjection = null;
         }
     }
 
@@ -86,58 +121,109 @@ public class ScreenRecorderService extends Service {
          */
     }
 
-    private MediaRecorder createMediaRecorder() {
-        File dir = FileUtils.getSavedVideoDir();
-        if (!dir.exists() && !dir.mkdir()) {
+    private VideoEncodeConfig createVideoConfig() {
+        final String codec = "OMX.qcom.video.encoder.avc";
+        if (codec == null) {
+            // no selected codec ??
             return null;
         }
-        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd-HHmmss", Locale.US);
-        final File file = new File(dir, "Screenshots-" + format.format(new Date())
-                + "-" + screenWidth + "x" + screenHeight + ".mp4");
-
-        //Used to record audio and video. The recording control is based on a simple state machine.
-        MediaRecorder mediaRecorder = new MediaRecorder();
-        //Set the video source to be used for recording.
-        mediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
-        //Set the format of the output produced during recording.
-        //3GPP media file format
-        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        //Sets the video encoding bit rate for recording.
-        //param:the video encoding bit rate in bits per second.
-        mediaRecorder.setVideoEncodingBitRate(5 * screenWidth * screenHeight);
-        //Sets the video encoder to be used for recording.
-        mediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
-        //Sets the width and height of the video to be captured.
-        mediaRecorder.setVideoSize(screenWidth, screenHeight);
-        //Sets the frame rate of the video to be captured.
-        mediaRecorder.setVideoFrameRate(60);
-        try {
-            //Pass in the file object to be written.
-            mediaRecorder.setOutputFile(file.getAbsolutePath());
-            //Prepares the recorder to begin capturing and encoding data.
-            mediaRecorder.prepare();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return mediaRecorder;
+        // video size
+        int width = screenWidth;
+        int height = screenHeight;
+        int framerate = 15;
+        int iframe = 1; // 关键帧时间1s
+        int bitrate = 800 * 1000;
+        MediaCodecInfo.CodecProfileLevel profileLevel = null;
+        return new VideoEncodeConfig(width, height, bitrate,
+                framerate, iframe, codec, VIDEO_AVC, profileLevel);
     }
 
-    private VirtualDisplay createVirtualDisplay() {
-        /**
-         * name    String: The name of the virtual display, must be non-empty.This value must never be null.
-         width int: The width of the virtual display in pixels. Must be greater than 0.
-         height    int: The height of the virtual display in pixels. Must be greater than 0.
-         dpi   int: The density of the virtual display in dpi. Must be greater than 0.
-         flags int: A combination of virtual display flags. See DisplayManager for the full list of flags.
-         surface   Surface: The surface to which the content of the virtual display should be rendered, or null if there is none initially.
-         callback  VirtualDisplay.Callback: Callback to call when the virtual display's state changes, or null if none.
-         handler   Handler: The Handler on which the callback should be invoked, or null if the callback should be invoked on the calling thread's main Looper.
-         */
-        /**
-         * DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR
-         * Virtual display flag: Allows content to be mirrored on private displays when no content is being shown.
-         */
-        return mediaProjection.createVirtualDisplay("mediaProjection", screenWidth, screenHeight, screenDensity,
-                DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR, mediaRecorder.getSurface(), null, null);
+    private boolean isLandscape(){
+        return false;
+    }
+
+    private void startRecorder() {
+        if (mRecorder == null) return;
+        mRecorder.start();
+    }
+
+    private void stopRecorder() {
+        if (mRecorder != null) {
+            mRecorder.quit();
+        }
+        mRecorder = null;
+        try {
+        } catch (Exception e) {
+            //ignored
+        }
+    }
+
+    private void cancelRecorder() {
+        if (mRecorder == null) return;
+        Toast.makeText(this, getString(R.string.permission_denied_screen_recorder_cancel), Toast.LENGTH_SHORT).show();
+        stopRecorder();
+    }
+
+    private MediaProjection.Callback mProjectionCallback = new MediaProjection.Callback() {
+        @Override
+        public void onStop() {
+            if (mRecorder != null) {
+                stopRecorder();
+            }
+        }
+    };
+
+    private ScreenRecorder newRecorder(MediaProjection mediaProjection, VideoEncodeConfig video,
+                                       final File output) {
+        final VirtualDisplay display = getOrCreateVirtualDisplay(mediaProjection, video);
+        ScreenRecorder r = new ScreenRecorder(video, null, display, output.getAbsolutePath());
+        r.setCallback(new ScreenRecorder.Callback() {
+            long startTime = 0;
+
+            @Override
+            public void onStop(Throwable error) {
+//                runOnUiThread(() -> stopRecorder());
+                if (error != null) {
+                    Toast.makeText(getApplicationContext(), "Recorder error ! See logcat for more details", Toast.LENGTH_LONG).show();
+                    error.printStackTrace();
+                    output.delete();
+                } else {
+                    Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
+                            .addCategory(Intent.CATEGORY_DEFAULT)
+                            .setData(Uri.fromFile(output));
+                    sendBroadcast(intent);
+                }
+            }
+
+            @Override
+            public void onStart() {
+            }
+
+            @Override
+            public void onRecording(long presentationTimeUs) {
+                if (startTime <= 0) {
+                    startTime = presentationTimeUs;
+                }
+                long time = (presentationTimeUs - startTime) / 1000;
+            }
+        });
+        return r;
+    }
+
+    private VirtualDisplay getOrCreateVirtualDisplay(MediaProjection mediaProjection, VideoEncodeConfig config) {
+        if (mVirtualDisplay == null) {
+            mVirtualDisplay = mediaProjection.createVirtualDisplay("ScreenRecorder-display0",
+                    config.width, config.height, screenDensity /*dpi*/,
+                    DisplayManager.VIRTUAL_DISPLAY_FLAG_PUBLIC,
+                    null /*surface*/, null, null);
+        } else {
+            // resize if size not matched
+            Point size = new Point();
+            mVirtualDisplay.getDisplay().getSize(size);
+            if (size.x != config.width || size.y != config.height) {
+                mVirtualDisplay.resize(config.width, config.height, screenDensity);
+            }
+        }
+        return mVirtualDisplay;
     }
 }
