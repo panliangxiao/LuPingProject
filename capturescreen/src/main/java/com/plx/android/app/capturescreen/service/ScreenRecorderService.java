@@ -52,15 +52,15 @@ public class ScreenRecorderService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         try {
-            resultCode = intent.getIntExtra("resultCode", -1);
-            resultData = intent.getParcelableExtra("resultData");
+            resultCode = intent.getIntExtra(RecorderConstants.result_code, -1);
+            resultData = intent.getParcelableExtra(RecorderConstants.result_data);
             screenWidth = intent.getIntExtra(RecorderConstants.screen_width, 0);
             screenHeight = intent.getIntExtra(RecorderConstants.screen_height, 0);
             screenDensity = intent.getIntExtra(RecorderConstants.screen_density, 0);
             mMediaProjection = createMediaProjection();
             if (mMediaProjection == null) {
                 if (VERBOSE)
-                    Log.e("@@", "media projection is null");
+                    Log.e(TAG, "media projection is null");
                 return START_NOT_STICKY;
             }
             mMediaProjection.registerCallback(mProjectionCallback, new Handler());

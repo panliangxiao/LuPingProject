@@ -19,4 +19,19 @@
         android:textColor="@color/colorPrimary"
         android:gravity="center_vertical"/>
 
+    <ImageView
+        android:id="@+id/sr_stop_recorder_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/screenrecord_portrait"
+        android:gravity="center_vertical"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="停止屏幕录制"
+        android:layout_marginTop="10dp"
+        android:textSize="22sp"
+        android:textColor="@color/colorPrimary"
+        android:gravity="center_vertical"/>
+
 </LinearLayout>

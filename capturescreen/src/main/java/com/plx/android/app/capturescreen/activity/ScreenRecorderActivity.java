@@ -34,19 +34,27 @@ public class ScreenRecorderActivity extends AbsBaseActivity {
     private VirtualDisplay mVirtualDisplay;
 
     private ImageView startRecorder;
+    private ImageView stopRecorder;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sr_recorder_main_act);
         startRecorder = findViewById(R.id.sr_recorder_btn);
+        stopRecorder = findViewById(R.id.sr_stop_recorder_btn);
         startRecorder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startRecorder();
             }
         });
-        requestCheckPermissions(needPermissions, REQUEST_PERMISSIONS);
+        stopRecorder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stopRecorder();
+            }
+        });
+//        requestCheckPermissions(needPermissions, REQUEST_PERMISSIONS);
 
 
     }
@@ -72,7 +80,7 @@ public class ScreenRecorderActivity extends AbsBaseActivity {
             int widthPixels = displayMetrics.widthPixels;
             int heightPixels = displayMetrics.heightPixels;
             //获取屏幕密度倍数
-            float density = displayMetrics.density;
+            int density = (int) displayMetrics.density;
             intent.putExtra(RecorderConstants.screen_width, widthPixels);
             intent.putExtra(RecorderConstants.screen_height, heightPixels);
             intent.putExtra(RecorderConstants.screen_density, density);
@@ -83,6 +91,11 @@ public class ScreenRecorderActivity extends AbsBaseActivity {
 
     private void startRecorder() {
         requestCheckPermissions(needPermissions, REQUEST_PERMISSIONS);
+    }
+
+    private void stopRecorder(){
+        Intent intent = new Intent(this, ScreenRecorderService.class);
+        stopService(intent);
     }
 
     @Override
