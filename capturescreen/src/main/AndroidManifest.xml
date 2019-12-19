@@ -1,8 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.plx.android.app.capturescreen" >
+
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
     <application>
         <activity android:name=".activity.ScreenRecorderActivity"
             android:theme="@style/AppTheme"/>
         <service android:name=".service.ScreenRecorderService"/>
+        <service android:name=".service.FloatControlService"/>
     </application>
 </manifest>

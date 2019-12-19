@@ -8,7 +8,7 @@
         android:id="@+id/sr_recorder_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/screenrecord_portrait"
+        android:src="@drawable/sr_screenrecord_portrait"
         android:gravity="center_vertical"/>
     <TextView
         android:layout_width="wrap_content"
@@ -23,7 +23,7 @@
         android:id="@+id/sr_stop_recorder_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/screenrecord_portrait"
+        android:src="@drawable/sr_screenrecord_portrait"
         android:gravity="center_vertical"/>
     <TextView
         android:layout_width="wrap_content"

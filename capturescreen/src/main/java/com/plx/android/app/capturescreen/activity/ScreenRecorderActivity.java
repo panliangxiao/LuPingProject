@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.hardware.display.VirtualDisplay;
 import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
@@ -15,7 +16,8 @@ import android.widget.Toast;
 import com.plx.android.app.base.AbsBaseActivity;
 import com.plx.android.app.capturescreen.R;
 import com.plx.android.app.capturescreen.constant.RecorderConstants;
-import com.plx.android.app.capturescreen.service.ScreenRecorderService;
+import com.plx.android.app.capturescreen.service.FloatControlService;
+import com.plx.android.app.capturescreen.utils.CheckFloatWindowUtil;
 
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -55,7 +57,7 @@ public class ScreenRecorderActivity extends AbsBaseActivity {
             }
         });
 //        requestCheckPermissions(needPermissions, REQUEST_PERMISSIONS);
-
+        requestCheckPermissions(needPermissions, REQUEST_PERMISSIONS);
 
     }
 
@@ -69,7 +71,7 @@ public class ScreenRecorderActivity extends AbsBaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_MEDIA_PROJECTION) {
             //获得录屏权限，启动Service进行录制
-            Intent intent = new Intent(this, ScreenRecorderService.class);
+            Intent intent = new Intent(this, FloatControlService.class);
             intent.putExtra(RecorderConstants.result_code, resultCode);
             intent.putExtra(RecorderConstants.result_data, data);
             //获取资源对象
@@ -89,21 +91,31 @@ public class ScreenRecorderActivity extends AbsBaseActivity {
         }
     }
 
+    private void openFloatView(){
+        if (Build.VERSION.SDK_INT > 24 && !CheckFloatWindowUtil.checkPermission(this)) {
+            CheckFloatWindowUtil.applyPermission(this);
+        } else {
+            Intent intent = new Intent(this, FloatControlService.class);
+            startService(intent);
+        }
+    }
+
     private void startRecorder() {
-        requestCheckPermissions(needPermissions, REQUEST_PERMISSIONS);
+        openFloatView();
+//        if (mMediaProjection == null) {
+//            requestMediaProjection();
+//        }
     }
 
     private void stopRecorder(){
-        Intent intent = new Intent(this, ScreenRecorderService.class);
+        Intent intent = new Intent(this, FloatControlService.class);
         stopService(intent);
     }
 
     @Override
     protected void onPermissionsGranted(int requestCode) {
         super.onPermissionsGranted(requestCode);
-        if (mMediaProjection == null) {
-            requestMediaProjection();
-        }
+
     }
 
     @Override
