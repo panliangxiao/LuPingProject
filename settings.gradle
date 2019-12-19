@@ -1,1 +1,1 @@
-include ':app', ':capturescreen'
+include ':mediaedit', ':capturescreen', ':app'
