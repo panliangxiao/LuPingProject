@@ -1,6 +1,7 @@
 package com.plx.android.app.capturescreen.utils;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.AppOpsManager;
 import android.content.Context;
 import android.content.Intent;
@@ -15,8 +16,9 @@ import android.util.Log;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+
+import static android.provider.Settings.ACTION_MANAGE_OVERLAY_PERMISSION;
 
 /**
  * desc: 悬浮窗权限检测／申请工具类。
@@ -59,6 +61,13 @@ public class CheckFloatWindowUtil {
         }
     }
 
+    public static void requestPermission(Activity activity, int requestCode){
+        Intent intent = new Intent(ACTION_MANAGE_OVERLAY_PERMISSION);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setData(Uri.parse("package:" + activity.getPackageName()));
+        activity.startActivityForResult(intent, requestCode);
+    }
+
     /**
      * 6.0之后通用的申请悬浮窗权限的方法
      *
@@ -66,10 +75,7 @@ public class CheckFloatWindowUtil {
      */
     public static void applyPermissionAfter23(Context context) {
         try {
-            Class clazz = Settings.class;
-            Field field = clazz.getDeclaredField("ACTION_MANAGE_OVERLAY_PERMISSION");
-
-            Intent intent = new Intent(field.get(null).toString());
+            Intent intent = new Intent(ACTION_MANAGE_OVERLAY_PERMISSION);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.setData(Uri.parse("package:" + context.getPackageName()));
             context.startActivity(intent);

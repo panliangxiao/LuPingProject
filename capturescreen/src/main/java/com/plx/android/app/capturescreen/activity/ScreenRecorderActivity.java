@@ -30,6 +30,8 @@ public class ScreenRecorderActivity extends AbsBaseActivity {
     private static final int REQUEST_MEDIA_PROJECTION = 0x0001;
     private static final int REQUEST_PERMISSIONS = 0x0002;
 
+    private static final int REQUEST_SYSTEM_ALERT_WINDOW_CODE = 0x0003;
+
     private MediaProjectionManager mMediaProjectionManager;
     private MediaProjection mMediaProjection;
     private VirtualDisplay mVirtualDisplay;
@@ -57,6 +59,7 @@ public class ScreenRecorderActivity extends AbsBaseActivity {
         });
 //        requestCheckPermissions(needPermissions, REQUEST_PERMISSIONS);
         requestCheckPermissions(needPermissions, REQUEST_PERMISSIONS);
+        openFloatView();
 
     }
 
@@ -87,12 +90,17 @@ public class ScreenRecorderActivity extends AbsBaseActivity {
             intent.putExtra(RecorderConstants.screen_density, density);
             startService(intent);
             Toast.makeText(this, "录屏开始", Toast.LENGTH_SHORT).show();
+        }else if (requestCode == REQUEST_SYSTEM_ALERT_WINDOW_CODE){
+            if (CheckFloatWindowUtil.checkPermission(this)) {
+                Intent intent = new Intent(this, FloatControlService.class);
+                startService(intent);
+            }
         }
     }
 
     private void openFloatView(){
-        if (Build.VERSION.SDK_INT > 24 && !CheckFloatWindowUtil.checkPermission(this)) {
-            CheckFloatWindowUtil.applyPermission(this);
+        if (!CheckFloatWindowUtil.checkPermission(this)) {
+            CheckFloatWindowUtil.requestPermission(this, REQUEST_SYSTEM_ALERT_WINDOW_CODE);
         } else {
             Intent intent = new Intent(this, FloatControlService.class);
             startService(intent);
@@ -100,7 +108,6 @@ public class ScreenRecorderActivity extends AbsBaseActivity {
     }
 
     private void startRecorder() {
-        openFloatView();
 //        if (mMediaProjection == null) {
 //            requestMediaProjection();
 //        }
