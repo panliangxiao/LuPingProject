@@ -1,4 +1,4 @@
-package com.plx.android.app.base;
+package com.plx.android.app.capturescreen.activity;
 
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;

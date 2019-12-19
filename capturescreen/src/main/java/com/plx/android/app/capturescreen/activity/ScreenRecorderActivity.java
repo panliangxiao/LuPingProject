@@ -13,7 +13,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.plx.android.app.base.AbsBaseActivity;
 import com.plx.android.app.capturescreen.R;
 import com.plx.android.app.capturescreen.constant.RecorderConstants;
 import com.plx.android.app.capturescreen.service.FloatControlService;
