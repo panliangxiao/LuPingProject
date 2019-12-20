@@ -1,9 +1,6 @@
 package com.plx.android.app.capturescreen.activity;
 
 import android.content.Intent;
-import android.content.res.Resources;
-import android.hardware.display.VirtualDisplay;
-import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -32,25 +29,26 @@ public class ScreenRecorderActivity extends AbsBaseActivity {
     private static final int REQUEST_SYSTEM_ALERT_WINDOW_CODE = 0x0003;
 
     private MediaProjectionManager mMediaProjectionManager;
-    private MediaProjection mMediaProjection;
-    private VirtualDisplay mVirtualDisplay;
 
-    private ImageView startRecorder;
-    private ImageView stopRecorder;
+    private ImageView mStartRecorder;
+    private ImageView mStopRecorder;
+
+    private int mResultCode = -1;
+    private Intent mResultData = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sr_recorder_main_act);
-        startRecorder = findViewById(R.id.sr_recorder_btn);
-        stopRecorder = findViewById(R.id.sr_stop_recorder_btn);
-        startRecorder.setOnClickListener(new View.OnClickListener() {
+        mStartRecorder = findViewById(R.id.sr_recorder_btn);
+        mStopRecorder = findViewById(R.id.sr_stop_recorder_btn);
+        mStartRecorder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startRecorder();
             }
         });
-        stopRecorder.setOnClickListener(new View.OnClickListener() {
+        mStopRecorder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 stopRecorder();
@@ -71,24 +69,8 @@ public class ScreenRecorderActivity extends AbsBaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_MEDIA_PROJECTION) {
-            //获得录屏权限，启动Service进行录制
-            Intent intent = new Intent(this, FloatControlService.class);
-            intent.putExtra(RecorderConstants.result_code, resultCode);
-            intent.putExtra(RecorderConstants.result_data, data);
-            //获取资源对象
-            Resources resources = getResources();
-            //获取屏幕数据
-            DisplayMetrics displayMetrics = resources.getDisplayMetrics();
-            //获取屏幕宽高，单位是像素
-            int widthPixels = displayMetrics.widthPixels;
-            int heightPixels = displayMetrics.heightPixels;
-            //获取屏幕密度倍数
-            int density = (int) displayMetrics.density;
-            intent.putExtra(RecorderConstants.screen_width, widthPixels);
-            intent.putExtra(RecorderConstants.screen_height, heightPixels);
-            intent.putExtra(RecorderConstants.screen_density, density);
-            startService(intent);
-            Toast.makeText(this, "录屏开始", Toast.LENGTH_SHORT).show();
+            mResultCode = resultCode;
+            mResultData = data;
         }else if (requestCode == REQUEST_SYSTEM_ALERT_WINDOW_CODE){
             if (CheckFloatWindowUtil.checkPermission(this)) {
                 Intent intent = new Intent(this, FloatControlService.class);
@@ -107,9 +89,26 @@ public class ScreenRecorderActivity extends AbsBaseActivity {
     }
 
     private void startRecorder() {
-//        if (mMediaProjection == null) {
-//            requestMediaProjection();
-//        }
+        if (mResultData != null) {
+            //获得录屏权限，启动Service进行录制
+            Intent intent = new Intent(this, FloatControlService.class);
+            intent.putExtra(RecorderConstants.result_code, mResultCode);
+            intent.putExtra(RecorderConstants.result_data, mResultData);
+            //获取屏幕数据
+            DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+            //获取屏幕宽高，单位是像素
+            int widthPixels = displayMetrics.widthPixels;
+            int heightPixels = displayMetrics.heightPixels;
+            //获取屏幕密度倍数
+            int density = (int) displayMetrics.density;
+            intent.putExtra(RecorderConstants.screen_width, widthPixels);
+            intent.putExtra(RecorderConstants.screen_height, heightPixels);
+            intent.putExtra(RecorderConstants.screen_density, density);
+            startService(intent);
+            Toast.makeText(this, "录屏开始", Toast.LENGTH_SHORT).show();
+        }else {
+            requestMediaProjection();
+        }
     }
 
     private void stopRecorder(){
@@ -120,7 +119,9 @@ public class ScreenRecorderActivity extends AbsBaseActivity {
     @Override
     protected void onPermissionsGranted(int requestCode) {
         super.onPermissionsGranted(requestCode);
-
+        if (requestCode == REQUEST_PERMISSIONS){
+            requestMediaProjection();
+        }
     }
 
     @Override
