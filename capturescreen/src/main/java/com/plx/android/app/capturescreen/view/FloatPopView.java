@@ -92,7 +92,6 @@ public class FloatPopView extends FrameLayout {
         } else {
             removeAllViews();
             LayoutInflater.from(getContext()).inflate(R.layout.sr_float_view_bigger, this);
-            mFloatView = findViewById(R.id.sr_float_pop);
             setOnTouchListener(new OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
