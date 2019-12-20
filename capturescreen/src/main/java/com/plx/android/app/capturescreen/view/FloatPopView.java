@@ -27,7 +27,7 @@ public class FloatPopView extends FrameLayout {
 
     private ImageView mFloatView;
 
-    private boolean mBigState = false;
+    private boolean mBiggerState = false;
 
     public FloatPopView(Context context) {
         super(context);
@@ -46,7 +46,7 @@ public class FloatPopView extends FrameLayout {
 
     private void initView() {
         initWindowManager();
-        if (!mBigState) {
+        if (!mBiggerState) {
             removeAllViews();
             LayoutInflater.from(getContext()).inflate(R.layout.sr_float_view_simple, this);
             mFloatView = findViewById(R.id.sr_float_pop);
@@ -141,13 +141,13 @@ public class FloatPopView extends FrameLayout {
 
         wmParams.format = PixelFormat.RGBA_8888;
         //设置浮动窗口不可聚焦（实现操作除浮动窗口外的其他可见窗口的操作）
-        if (mBigState) {
+        if (mBiggerState) {
             wmParams.flags = WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
         } else {
             wmParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
         }
         //调整悬浮窗显示的停靠位置为左侧置顶
-        if (!mBigState) {
+        if (!mBiggerState) {
             wmParams.gravity = Gravity.END | Gravity.CENTER_VERTICAL;
         } else {
             wmParams.gravity = Gravity.CENTER;
@@ -167,7 +167,7 @@ public class FloatPopView extends FrameLayout {
     }
 
     private void changeFloatState() {
-        mBigState = !mBigState;
+        mBiggerState = !mBiggerState;
         initView();
     }
 }
