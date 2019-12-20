@@ -4,16 +4,16 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 
-import com.plx.android.app.capturescreen.view.FloatControlView;
+import com.plx.android.app.capturescreen.view.FloatPopView;
 
-public class FloatControlService extends Service {
+public class FloatService extends Service {
 
-    private FloatControlView floatControlView;
+    private FloatPopView mFloatPopView;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        floatControlView = new FloatControlView(getApplicationContext());
+        mFloatPopView = new FloatPopView(getApplicationContext());
     }
 
     @Override
@@ -24,9 +24,9 @@ public class FloatControlService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (floatControlView != null) {
+        if (mFloatPopView != null) {
             //移除悬浮窗口
-            floatControlView.remove();
+            mFloatPopView.remove();
         }
     }
 }

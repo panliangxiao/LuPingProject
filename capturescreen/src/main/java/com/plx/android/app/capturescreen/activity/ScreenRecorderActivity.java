@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import com.plx.android.app.capturescreen.R;
 import com.plx.android.app.capturescreen.constant.RecorderConstants;
-import com.plx.android.app.capturescreen.service.FloatControlService;
+import com.plx.android.app.capturescreen.service.FloatService;
 import com.plx.android.app.capturescreen.utils.CheckFloatWindowUtil;
 
 import static android.Manifest.permission.RECORD_AUDIO;
@@ -73,7 +73,7 @@ public class ScreenRecorderActivity extends AbsBaseActivity {
             mResultData = data;
         }else if (requestCode == REQUEST_SYSTEM_ALERT_WINDOW_CODE){
             if (CheckFloatWindowUtil.checkPermission(this)) {
-                Intent intent = new Intent(this, FloatControlService.class);
+                Intent intent = new Intent(this, FloatService.class);
                 startService(intent);
             }
         }
@@ -83,7 +83,7 @@ public class ScreenRecorderActivity extends AbsBaseActivity {
         if (!CheckFloatWindowUtil.checkPermission(this)) {
             CheckFloatWindowUtil.requestPermission(this, REQUEST_SYSTEM_ALERT_WINDOW_CODE);
         } else {
-            Intent intent = new Intent(this, FloatControlService.class);
+            Intent intent = new Intent(this, FloatService.class);
             startService(intent);
         }
     }
@@ -91,7 +91,7 @@ public class ScreenRecorderActivity extends AbsBaseActivity {
     private void startRecorder() {
         if (mResultData != null) {
             //获得录屏权限，启动Service进行录制
-            Intent intent = new Intent(this, FloatControlService.class);
+            Intent intent = new Intent(this, FloatService.class);
             intent.putExtra(RecorderConstants.result_code, mResultCode);
             intent.putExtra(RecorderConstants.result_data, mResultData);
             //获取屏幕数据
@@ -112,7 +112,7 @@ public class ScreenRecorderActivity extends AbsBaseActivity {
     }
 
     private void stopRecorder(){
-        Intent intent = new Intent(this, FloatControlService.class);
+        Intent intent = new Intent(this, FloatService.class);
         stopService(intent);
     }
 

@@ -12,44 +12,45 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.plx.android.app.capturescreen.R;
 
-public class FloatControlView extends FrameLayout {
+public class FloatPopView extends FrameLayout {
 
-    private static final String TAG = FloatControlView.class.getSimpleName();
+    private static final String TAG = FloatPopView.class.getSimpleName();
 
     private WindowManager.LayoutParams wmParams;
 
     //创建浮动窗口设置布局参数的对象
     private WindowManager windowManager;
 
-    private ImageView floatView;
+    private ImageView mFloatView;
 
-    private boolean showBigger = false;
+    private boolean mBigState = false;
 
-    public FloatControlView(Context context) {
+    public FloatPopView(Context context) {
         super(context);
         initView();
     }
 
-    public FloatControlView(Context context, AttributeSet attrs) {
+    public FloatPopView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initView();
     }
 
-    public FloatControlView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public FloatPopView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initView();
     }
 
     private void initView() {
-        initWindowManager(showBigger);
-        if (!showBigger) {
+        initWindowManager();
+        if (!mBigState) {
             removeAllViews();
             LayoutInflater.from(getContext()).inflate(R.layout.sr_float_view_simple, this);
-            floatView = findViewById(R.id.sr_float_pop);
-            floatView.setOnTouchListener(new OnTouchListener() {
+            mFloatView = findViewById(R.id.sr_float_pop);
+            setOnTouchListener(new OnTouchListener() {
                 private int x;
                 private int y;
 
@@ -72,7 +73,7 @@ public class FloatControlView extends FrameLayout {
                             Log.e(TAG, "MOVEX : " + movedX + ", MOVEY : " + movedY);
 
                             // 更新悬浮窗控件布局
-                            windowManager.updateViewLayout(FloatControlView.this, wmParams);
+                            windowManager.updateViewLayout(FloatPopView.this, wmParams);
                             break;
                         default:
                             break;
@@ -82,23 +83,37 @@ public class FloatControlView extends FrameLayout {
                 }
             });
 
-            floatView.setOnClickListener(new OnClickListener() {
+            mFloatView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    showBigger();
+                    changeFloatState();
                 }
             });
         } else {
             removeAllViews();
             LayoutInflater.from(getContext()).inflate(R.layout.sr_float_view_bigger, this);
-            floatView = findViewById(R.id.sr_float_pop);
+            mFloatView = findViewById(R.id.sr_float_pop);
             setOnTouchListener(new OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
-                    if (event.getAction() == MotionEvent.ACTION_OUTSIDE){
-                        showSmall();
+                    final int x = (int) event.getX();
+                    final int y = (int) event.getY();
+                    Log.e(TAG, "X : " + x + ", Y : " + y);
+                    if ((event.getAction() == MotionEvent.ACTION_DOWN)
+                            && ((x < 0) || (x >= getWidth()) || (y < 0) || (y >= getHeight()))) {
+                        changeFloatState();
+                        return true;
+                    }else if (event.getAction() == MotionEvent.ACTION_OUTSIDE){
+                        changeFloatState();
+                        return true;
                     }
                     return false;
+                }
+            });
+            setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getContext(), "dianji", Toast.LENGTH_LONG).show();
                 }
             });
 
@@ -111,7 +126,7 @@ public class FloatControlView extends FrameLayout {
         }
     }
 
-    private void initWindowManager(boolean showBigger) {
+    private void initWindowManager() {
         wmParams = new WindowManager.LayoutParams();
 
         windowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
@@ -126,13 +141,13 @@ public class FloatControlView extends FrameLayout {
 
         wmParams.format = PixelFormat.RGBA_8888;
         //设置浮动窗口不可聚焦（实现操作除浮动窗口外的其他可见窗口的操作）
-        if (showBigger) {
-            wmParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
+        if (mBigState) {
+            wmParams.flags = WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
         } else {
             wmParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
         }
         //调整悬浮窗显示的停靠位置为左侧置顶
-        if (!showBigger) {
+        if (!mBigState) {
             wmParams.gravity = Gravity.END | Gravity.CENTER_VERTICAL;
         } else {
             wmParams.gravity = Gravity.CENTER;
@@ -151,13 +166,8 @@ public class FloatControlView extends FrameLayout {
         windowManager.removeView(this);
     }
 
-    private void showSmall() {
-        showBigger = false;
-        initView();
-    }
-
-    private void showBigger() {
-        showBigger = true;
+    private void changeFloatState() {
+        mBigState = !mBigState;
         initView();
     }
 }

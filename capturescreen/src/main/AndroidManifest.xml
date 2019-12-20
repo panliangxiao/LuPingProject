@@ -7,6 +7,6 @@
         <activity android:name=".activity.ScreenRecorderActivity"
             android:theme="@style/AppTheme"/>
         <service android:name=".service.ScreenRecorderService"/>
-        <service android:name=".service.FloatControlService"/>
+        <service android:name=".service.FloatService"/>
     </application>
 </manifest>
