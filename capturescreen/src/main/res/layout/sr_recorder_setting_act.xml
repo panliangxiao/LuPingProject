@@ -11,6 +11,7 @@
         android:paddingLeft="@dimen/sr_common_title_padding"
         android:paddingRight="@dimen/sr_common_title_padding">
         <ImageView
+            android:id="@+id/sr_setting_back_btn"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:src="@drawable/sr_back_left_normal"
