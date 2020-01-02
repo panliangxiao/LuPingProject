@@ -52,7 +52,7 @@ public class ScreenRecorderActivity extends AbsBaseActivity {
         tvRecorderSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                startActivity(new Intent(ScreenRecorderActivity.this, RecorderSettingActivity.class));
             }
         });
 //        requestCheckPermissions(needPermissions, REQUEST_PERMISSIONS);

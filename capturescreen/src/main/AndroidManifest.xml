@@ -8,5 +8,7 @@
             android:theme="@style/AppTheme"/>
         <service android:name=".service.ScreenRecorderService"/>
         <service android:name=".service.FloatService"/>
+        <activity android:name=".activity.RecorderSettingActivity"
+            android:theme="@style/AppTheme"/>
     </application>
 </manifest>
