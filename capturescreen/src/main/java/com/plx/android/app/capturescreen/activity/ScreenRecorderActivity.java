@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.plx.android.app.capturescreen.R;
@@ -31,7 +32,7 @@ public class ScreenRecorderActivity extends AbsBaseActivity {
     private MediaProjectionManager mMediaProjectionManager;
 
     private ImageView mStartRecorder;
-    private ImageView mStopRecorder;
+    private TextView tvRecorderSetting;
 
     private int mResultCode = -1;
     private Intent mResultData = null;
@@ -41,17 +42,17 @@ public class ScreenRecorderActivity extends AbsBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sr_recorder_main_act);
         mStartRecorder = findViewById(R.id.sr_recorder_btn);
-        mStopRecorder = findViewById(R.id.sr_stop_recorder_btn);
+        tvRecorderSetting = findViewById(R.id.sr_recorder_set_btn);
         mStartRecorder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startRecorder();
             }
         });
-        mStopRecorder.setOnClickListener(new View.OnClickListener() {
+        tvRecorderSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                stopRecorder();
+
             }
         });
 //        requestCheckPermissions(needPermissions, REQUEST_PERMISSIONS);
