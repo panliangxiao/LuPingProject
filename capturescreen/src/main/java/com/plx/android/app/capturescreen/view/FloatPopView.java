@@ -29,6 +29,9 @@ public class FloatPopView extends FrameLayout {
 
     private boolean mBiggerState = false;
 
+    private int mX;
+    private int mY;
+
     public FloatPopView(Context context) {
         super(context);
         initView();
@@ -50,38 +53,7 @@ public class FloatPopView extends FrameLayout {
             removeAllViews();
             LayoutInflater.from(getContext()).inflate(R.layout.sr_float_view_simple, this);
             mFloatView = findViewById(R.id.sr_float_pop);
-            setOnTouchListener(new OnTouchListener() {
-                private int x;
-                private int y;
-
-                @Override
-                public boolean onTouch(View view, MotionEvent event) {
-                    switch (event.getAction()) {
-                        case MotionEvent.ACTION_DOWN:
-                            x = (int) event.getRawX();
-                            y = (int) event.getRawY();
-                            break;
-                        case MotionEvent.ACTION_MOVE:
-                            int nowX = (int) event.getRawX();
-                            int nowY = (int) event.getRawY();
-                            int movedX = nowX - x;
-                            int movedY = nowY - y;
-                            x = nowX;
-                            y = nowY;
-                            wmParams.x -= movedX;
-                            wmParams.y += movedY;
-                            Log.e(TAG, "MOVEX : " + movedX + ", MOVEY : " + movedY);
-
-                            // 更新悬浮窗控件布局
-                            windowManager.updateViewLayout(FloatPopView.this, wmParams);
-                            break;
-                        default:
-                            break;
-                    }
-                    return false;
-
-                }
-            });
+            mFloatView.setOnTouchListener(onTouchListener);
 
             mFloatView.setOnClickListener(new OnClickListener() {
                 @Override
@@ -152,8 +124,13 @@ public class FloatPopView extends FrameLayout {
             wmParams.gravity = Gravity.CENTER;
         }
         // 以屏幕左上角为原点，设置x、y初始值，相对于gravity
-        wmParams.x = 0;
-        wmParams.y = 0;
+        if (!mBiggerState) {
+            wmParams.x = mX;
+            wmParams.y = mY;
+        }else {
+            wmParams.x = 0;
+            wmParams.y = 0;
+        }
 
         //设置悬浮窗口长宽数据
         wmParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
@@ -169,4 +146,37 @@ public class FloatPopView extends FrameLayout {
         mBiggerState = !mBiggerState;
         initView();
     }
+
+    private OnTouchListener onTouchListener = new OnTouchListener() {
+        private int x;
+        private int y;
+
+        @Override
+        public boolean onTouch(View view, MotionEvent event) {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    x = (int) event.getRawX();
+                    y = (int) event.getRawY();
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    int nowX = (int) event.getRawX();
+                    int nowY = (int) event.getRawY();
+                    int movedX = nowX - x;
+                    int movedY = nowY - y;
+                    x = nowX;
+                    y = nowY;
+                    mX = wmParams.x -= movedX;
+                    mY = wmParams.y += movedY;
+                    Log.e(TAG, "MOVEX : " + movedX + ", MOVEY : " + movedY);
+
+                    // 更新悬浮窗控件布局
+                    windowManager.updateViewLayout(FloatPopView.this, wmParams);
+                    break;
+                default:
+                    break;
+            }
+            return false;
+
+        }
+    };
 }
