@@ -4,4 +4,4 @@
     android:id="@+id/sr_float_pop"
     android:layout_width="38dp"
     android:layout_height="38dp"
-    android:src="@drawable/sr_floatview_icon_open"/>
+    android:src="@drawable/sr_float_view_small"/>
