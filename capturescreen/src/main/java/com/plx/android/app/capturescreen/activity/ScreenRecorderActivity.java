@@ -31,7 +31,7 @@ public class ScreenRecorderActivity extends AbsBaseActivity {
 
     private MediaProjectionManager mMediaProjectionManager;
 
-    private ImageView mStartRecorder;
+    private View mStartRecorder;
     private TextView tvRecorderSetting;
 
     private int mResultCode = -1;
