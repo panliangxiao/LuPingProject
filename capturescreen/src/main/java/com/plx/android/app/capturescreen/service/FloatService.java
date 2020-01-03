@@ -17,6 +17,14 @@ public class FloatService extends Service {
     }
 
     @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        if (mFloatPopView != null){
+            mFloatPopView.setIntent(intent);
+        }
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Override
     public IBinder onBind(Intent intent) {
         return null;
     }

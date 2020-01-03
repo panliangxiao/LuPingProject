@@ -90,32 +90,27 @@ public class ScreenRecorderActivity extends AbsBaseActivity {
     }
 
     private void startRecorder() {
-        openFloatView();
-//        if (mResultData != null) {
-//            //获得录屏权限，启动Service进行录制
-//            Intent intent = new Intent(this, FloatService.class);
-//            intent.putExtra(RecorderConstants.result_code, mResultCode);
-//            intent.putExtra(RecorderConstants.result_data, mResultData);
-//            //获取屏幕数据
-//            DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-//            //获取屏幕宽高，单位是像素
-//            int widthPixels = displayMetrics.widthPixels;
-//            int heightPixels = displayMetrics.heightPixels;
-//            //获取屏幕密度倍数
-//            int density = (int) displayMetrics.density;
-//            intent.putExtra(RecorderConstants.screen_width, widthPixels);
-//            intent.putExtra(RecorderConstants.screen_height, heightPixels);
-//            intent.putExtra(RecorderConstants.screen_density, density);
-//            startService(intent);
-//            Toast.makeText(this, "录屏开始", Toast.LENGTH_SHORT).show();
-//        }else {
-//            requestMediaProjection();
-//        }
-    }
-
-    private void stopRecorder(){
-        Intent intent = new Intent(this, FloatService.class);
-        stopService(intent);
+//        openFloatView();
+        if (mResultData != null) {
+            //获得录屏权限，启动Service进行录制
+            Intent intent = new Intent(this, FloatService.class);
+            intent.putExtra(RecorderConstants.result_code, mResultCode);
+            intent.putExtra(RecorderConstants.result_data, mResultData);
+            //获取屏幕数据
+            DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+            //获取屏幕宽高，单位是像素
+            int widthPixels = displayMetrics.widthPixels;
+            int heightPixels = displayMetrics.heightPixels;
+            //获取屏幕密度倍数
+            int density = (int) displayMetrics.density;
+            intent.putExtra(RecorderConstants.screen_width, widthPixels);
+            intent.putExtra(RecorderConstants.screen_height, heightPixels);
+            intent.putExtra(RecorderConstants.screen_density, density);
+            startService(intent);
+            Toast.makeText(this, "录屏开始", Toast.LENGTH_SHORT).show();
+        }else {
+            requestMediaProjection();
+        }
     }
 
     @Override

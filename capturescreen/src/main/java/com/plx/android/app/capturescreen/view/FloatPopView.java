@@ -1,9 +1,11 @@
 package com.plx.android.app.capturescreen.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -15,8 +17,11 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.plx.android.app.capturescreen.R;
+import com.plx.android.app.capturescreen.constant.RecorderConstants;
+import com.plx.android.app.capturescreen.service.FloatService;
+import com.plx.android.app.capturescreen.service.ScreenRecorderService;
 
-public class FloatPopView extends FrameLayout {
+public class FloatPopView extends FrameLayout implements View.OnClickListener {
 
     private static final String TAG = FloatPopView.class.getSimpleName();
 
@@ -26,6 +31,10 @@ public class FloatPopView extends FrameLayout {
     private WindowManager windowManager;
 
     private ImageView mFloatView;
+
+    private View mStart;
+    private View mStop;
+    private View mHome;
 
     private boolean mBiggerState = false;
 
@@ -64,6 +73,12 @@ public class FloatPopView extends FrameLayout {
         } else {
             removeAllViews();
             LayoutInflater.from(getContext()).inflate(R.layout.sr_float_view_bigger, this);
+            mStart = findViewById(R.id.sr_recorder_start);
+            mStop = findViewById(R.id.sr_recorder_stop);
+            mHome = findViewById(R.id.sr_recorder_home);
+            mStart.setOnClickListener(this);
+            mStop.setOnClickListener(this);
+            mHome.setOnClickListener(this);
             setOnTouchListener(new OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
@@ -179,4 +194,36 @@ public class FloatPopView extends FrameLayout {
 
         }
     };
+
+    private void startRecorder(){
+        if (mIntent != null) {
+            //获得录屏权限，启动Service进行录制
+            Intent intent = new Intent(getContext(), ScreenRecorderService.class);
+            intent.putExtras(mIntent);
+            getContext().startService(intent);
+        }
+    }
+
+    private void stopRecorder(){
+        Intent intent = new Intent(getContext(), ScreenRecorderService.class);
+        getContext().stopService(intent);
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if (id == R.id.sr_recorder_start){
+            startRecorder();
+        }else if (id == R.id.sr_recorder_stop){
+            stopRecorder();
+        }else if (id == R.id.sr_recorder_home){
+
+        }
+    }
+
+    private Intent mIntent = null;
+
+    public void setIntent(Intent intent){
+        mIntent = intent;
+    }
 }
