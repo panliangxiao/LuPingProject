@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -18,8 +17,6 @@ import android.widget.Toast;
 
 import com.plx.android.app.capturescreen.R;
 import com.plx.android.app.capturescreen.activity.ScreenRecorderActivity;
-import com.plx.android.app.capturescreen.constant.RecorderConstants;
-import com.plx.android.app.capturescreen.service.FloatService;
 import com.plx.android.app.capturescreen.service.ScreenRecorderService;
 
 public class FloatPopView extends FrameLayout implements View.OnClickListener {
