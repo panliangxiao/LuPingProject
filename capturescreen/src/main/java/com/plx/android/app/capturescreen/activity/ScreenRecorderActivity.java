@@ -108,6 +108,7 @@ public class ScreenRecorderActivity extends AbsBaseActivity {
             intent.putExtra(RecorderConstants.screen_density, density);
             startService(intent);
             Toast.makeText(this, "录屏开始", Toast.LENGTH_SHORT).show();
+            moveTaskToBack(true);
         }else {
             requestMediaProjection();
         }
