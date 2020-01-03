@@ -3,6 +3,7 @@ package com.plx.android.app.capturescreen.service;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.util.Log;
 
 import com.plx.android.app.capturescreen.view.FloatPopView;
 
@@ -13,11 +14,13 @@ public class FloatService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.e("FloatService", "onCreate");
         mFloatPopView = new FloatPopView(getApplicationContext());
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.e("FloatService", "onStartCommand");
         if (mFloatPopView != null){
             mFloatPopView.setIntent(intent);
         }
