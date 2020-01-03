@@ -132,7 +132,7 @@ public class ScreenRecorderService extends Service {
         int height = screenHeight;
         int framerate = 15;
         int iframe = 1; // 关键帧时间1s
-        int bitrate = 800 * 1000;
+        int bitrate = 1200 * 1000;
         MediaCodecInfo.CodecProfileLevel profileLevel = null;
         return new VideoEncodeConfig(width, height, bitrate,
                 framerate, iframe, codec, VIDEO_AVC, profileLevel);
@@ -205,6 +205,7 @@ public class ScreenRecorderService extends Service {
                     startTime = presentationTimeUs;
                 }
                 long time = (presentationTimeUs - startTime) / 1000;
+                Log.e(TAG, "onRecording : " + time);
             }
         });
         return r;
