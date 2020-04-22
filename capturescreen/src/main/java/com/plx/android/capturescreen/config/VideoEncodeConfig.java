@@ -1,4 +1,4 @@
-package com.plx.android.app.capturescreen.config;
+package com.plx.android.capturescreen.config;
 
 import android.media.MediaCodecInfo;
 import android.media.MediaFormat;

@@ -1,4 +1,4 @@
-package com.plx.android.app.capturescreen.encoder;
+package com.plx.android.capturescreen.encoder;
 
 import android.media.MediaCodec;
 import android.media.MediaFormat;

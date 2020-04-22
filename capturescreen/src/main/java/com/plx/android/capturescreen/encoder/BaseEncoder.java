@@ -1,4 +1,4 @@
-package com.plx.android.app.capturescreen.encoder;
+package com.plx.android.capturescreen.encoder;
 
 import android.media.MediaCodec;
 import android.media.MediaFormat;
@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Objects;
 
-import static com.plx.android.app.capturescreen.constant.RecorderConstants.VERBOSE;
+import static com.plx.android.capturescreen.constant.RecorderConstants.VERBOSE;
 
 public abstract class BaseEncoder implements Encoder {
     private static final String TAG = BaseEncoder.class.getSimpleName();

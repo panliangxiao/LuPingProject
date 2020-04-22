@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.plx.android.app.capturescreen" >
+    package="com.plx.android.capturescreen" >
 
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 

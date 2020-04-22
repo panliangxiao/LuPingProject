@@ -1,4 +1,4 @@
-package com.plx.android.app.capturescreen.activity;
+package com.plx.android.capturescreen.activity;
 
 import android.content.Intent;
 import android.media.projection.MediaProjectionManager;
@@ -9,10 +9,10 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.plx.android.app.capturescreen.R;
-import com.plx.android.app.capturescreen.constant.RecorderConstants;
-import com.plx.android.app.capturescreen.service.FloatService;
-import com.plx.android.app.capturescreen.utils.CheckFloatWindowUtil;
+import com.plx.android.capturescreen.R;
+import com.plx.android.capturescreen.constant.RecorderConstants;
+import com.plx.android.capturescreen.service.FloatService;
+import com.plx.android.capturescreen.utils.CheckFloatWindowUtil;
 
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;

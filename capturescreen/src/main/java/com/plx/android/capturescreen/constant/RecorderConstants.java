@@ -1,4 +1,4 @@
-package com.plx.android.app.capturescreen.constant;
+package com.plx.android.capturescreen.constant;
 
 public class RecorderConstants {
 

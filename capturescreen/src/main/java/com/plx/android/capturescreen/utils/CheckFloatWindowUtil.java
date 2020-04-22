@@ -1,4 +1,4 @@
-package com.plx.android.app.capturescreen.utils;
+package com.plx.android.capturescreen.utils;
 
 import android.annotation.TargetApi;
 import android.app.Activity;

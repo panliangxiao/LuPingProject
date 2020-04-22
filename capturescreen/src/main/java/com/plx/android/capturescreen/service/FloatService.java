@@ -1,11 +1,11 @@
-package com.plx.android.app.capturescreen.service;
+package com.plx.android.capturescreen.service;
 
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
 
-import com.plx.android.app.capturescreen.view.FloatPopView;
+import com.plx.android.capturescreen.view.FloatPopView;
 
 public class FloatService extends Service {
 

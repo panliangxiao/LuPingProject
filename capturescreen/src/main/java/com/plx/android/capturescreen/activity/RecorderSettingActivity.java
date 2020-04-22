@@ -1,11 +1,11 @@
-package com.plx.android.app.capturescreen.activity;
+package com.plx.android.capturescreen.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import com.plx.android.app.capturescreen.R;
+import com.plx.android.capturescreen.R;
 
 public class RecorderSettingActivity extends AppCompatActivity {
 

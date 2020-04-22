@@ -1,4 +1,4 @@
-package com.plx.android.app.capturescreen.core;
+package com.plx.android.capturescreen.core;
 
 import android.hardware.display.VirtualDisplay;
 import android.media.MediaCodec;
@@ -11,23 +11,22 @@ import android.os.Message;
 import android.util.Log;
 import android.view.Surface;
 
-import com.plx.android.app.capturescreen.config.EncoderConfig;
-import com.plx.android.app.capturescreen.encoder.BaseEncoder;
-import com.plx.android.app.capturescreen.encoder.CodecDelegateCallback;
-import com.plx.android.app.capturescreen.encoder.VideoEncoder;
+import com.plx.android.capturescreen.config.EncoderConfig;
+import com.plx.android.capturescreen.encoder.BaseEncoder;
+import com.plx.android.capturescreen.encoder.CodecDelegateCallback;
+import com.plx.android.capturescreen.encoder.VideoEncoder;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.LinkedList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static android.media.MediaFormat.MIMETYPE_AUDIO_AAC;
 import static android.media.MediaFormat.MIMETYPE_VIDEO_AVC;
-import static com.plx.android.app.capturescreen.constant.RecorderConstants.MSG_ERROR;
-import static com.plx.android.app.capturescreen.constant.RecorderConstants.MSG_START;
-import static com.plx.android.app.capturescreen.constant.RecorderConstants.MSG_STOP;
-import static com.plx.android.app.capturescreen.constant.RecorderConstants.STOP_WITH_EOS;
-import static com.plx.android.app.capturescreen.constant.RecorderConstants.VERBOSE;
+import static com.plx.android.capturescreen.constant.RecorderConstants.MSG_ERROR;
+import static com.plx.android.capturescreen.constant.RecorderConstants.MSG_START;
+import static com.plx.android.capturescreen.constant.RecorderConstants.MSG_STOP;
+import static com.plx.android.capturescreen.constant.RecorderConstants.STOP_WITH_EOS;
+import static com.plx.android.capturescreen.constant.RecorderConstants.VERBOSE;
 
 public class ScreenRecorder {
     private static final String TAG = ScreenRecorder.class.getSimpleName();

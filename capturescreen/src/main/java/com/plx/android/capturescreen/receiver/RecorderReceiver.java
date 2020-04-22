@@ -1,4 +1,4 @@
-package com.plx.android.app.capturescreen.receiver;
+package com.plx.android.capturescreen.receiver;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

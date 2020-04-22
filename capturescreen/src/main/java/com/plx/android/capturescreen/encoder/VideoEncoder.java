@@ -1,15 +1,15 @@
-package com.plx.android.app.capturescreen.encoder;
+package com.plx.android.capturescreen.encoder;
 
 import android.media.MediaCodec;
 import android.media.MediaFormat;
 import android.util.Log;
 import android.view.Surface;
 
-import com.plx.android.app.capturescreen.config.EncoderConfig;
+import com.plx.android.capturescreen.config.EncoderConfig;
 
 import java.util.Objects;
 
-import static com.plx.android.app.capturescreen.constant.RecorderConstants.VERBOSE;
+import static com.plx.android.capturescreen.constant.RecorderConstants.VERBOSE;
 
 public class VideoEncoder extends BaseEncoder {
     private static final String TAG = VideoEncoder.class.getSimpleName();

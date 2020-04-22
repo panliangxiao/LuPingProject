@@ -1,4 +1,4 @@
-package com.plx.android.app.capturescreen.view;
+package com.plx.android.capturescreen.view;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,9 +15,9 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.plx.android.app.capturescreen.R;
-import com.plx.android.app.capturescreen.activity.ScreenRecorderActivity;
-import com.plx.android.app.capturescreen.service.ScreenRecorderService;
+import com.plx.android.capturescreen.R;
+import com.plx.android.capturescreen.activity.ScreenRecorderActivity;
+import com.plx.android.capturescreen.service.ScreenRecorderService;
 
 public class FloatPopView extends FrameLayout implements View.OnClickListener {
 

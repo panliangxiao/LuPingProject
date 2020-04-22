@@ -1,4 +1,4 @@
-package com.plx.android.app.capturescreen.service;
+package com.plx.android.capturescreen.service;
 
 import android.app.Service;
 import android.content.Context;
@@ -15,19 +15,19 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.plx.android.app.capturescreen.R;
-import com.plx.android.app.capturescreen.config.VideoEncodeConfig;
-import com.plx.android.app.capturescreen.constant.RecorderConstants;
-import com.plx.android.app.capturescreen.core.ScreenRecorder;
-import com.plx.android.app.capturescreen.utils.FileUtils;
+import com.plx.android.capturescreen.R;
+import com.plx.android.capturescreen.config.VideoEncodeConfig;
+import com.plx.android.capturescreen.constant.RecorderConstants;
+import com.plx.android.capturescreen.core.ScreenRecorder;
+import com.plx.android.capturescreen.utils.FileUtils;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import static com.plx.android.app.capturescreen.constant.RecorderConstants.VERBOSE;
-import static com.plx.android.app.capturescreen.core.ScreenRecorder.VIDEO_AVC;
+import static com.plx.android.capturescreen.constant.RecorderConstants.VERBOSE;
+import static com.plx.android.capturescreen.core.ScreenRecorder.VIDEO_AVC;
 
 public class ScreenRecorderService extends Service {
 
